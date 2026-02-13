@@ -1,7 +1,5 @@
-import DepositFlow from "./DepositFlow";
+import EventPage from "./EventPage";
 
-const Index = () => {
-  return <DepositFlow />;
-};
+const Index = () => <EventPage />;
 
 export default Index;
