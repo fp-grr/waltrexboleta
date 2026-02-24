@@ -166,7 +166,7 @@ const CheckoutDrawer = ({ open, onClose, ticketType, quantity, unitPrice }: Chec
         {(step === "crypto-pay" || step === "confirming" || step === "complete") && (
           <div className="px-6 py-3 border-t border-border flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <Shield className="w-3 h-3" />
-            <span>Crypto payments by <span className="text-gradient-green font-semibold">Wally</span> · FX by <span className="text-gradient-green font-semibold">Alter</span></span>
+            <span>Powered by <span className="text-gradient-green font-semibold">waltrex</span></span>
           </div>
         )}
       </div>
