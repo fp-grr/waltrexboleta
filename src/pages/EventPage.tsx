@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Calendar, MapPin, Clock, Star, Users, Share2, Heart, ChevronDown, Info, ShieldCheck } from "lucide-react";
 import Navbar from "../components/Navbar";
-import CheckoutDrawer from "../components/CheckoutDrawer";
+import { WaltrexCheckout, type WaltrexCheckoutConfig } from "../components/waltrex";
 import eventHero from "@/assets/event-hero.jpg";
 import venuePhoto from "@/assets/venue-photo.jpg";
 
@@ -10,6 +10,15 @@ const TICKET_TIERS = [
   { id: "vip", label: "VIP Experience", price: 4200, description: "VIP lounge · Premium viewing · Open bar", available: true },
   { id: "platinum", label: "Platinum", price: 8500, description: "Front row · Meet & greet · All-inclusive", available: false },
 ];
+
+const CHECKOUT_CONFIG: WaltrexCheckoutConfig = {
+  merchantName: "BoletaMX",
+  settleCurrency: "MXN",
+  feePct: 0.08,
+  fxEnabled: true,
+  amountMode: "fixed",
+  successCopy: { title: "You're in!", subtitle: "Your tickets have been confirmed", cta: "View my tickets" },
+};
 
 const LINEUP = [
   { name: "DJ Orbital", time: "9:00 PM", stage: "Main Stage" },
@@ -215,13 +224,12 @@ const EventPage = () => {
         </div>
       </footer>
 
-      {/* Checkout Drawer */}
-      <CheckoutDrawer
+      <WaltrexCheckout
         open={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
-        ticketType={selectedTier.label}
-        quantity={quantity}
-        unitPrice={selectedTier.price}
+        config={CHECKOUT_CONFIG}
+        amount={selectedTier.price * quantity}
+        summaryLabel={`${quantity}× ${selectedTier.label}`}
       />
     </div>
   );

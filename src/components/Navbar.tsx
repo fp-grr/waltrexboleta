@@ -1,5 +1,6 @@
 import { Ticket, Search, User, Menu, Globe } from "lucide-react";
 import { useState } from "react";
+import SiteSwitcher from "./SiteSwitcher";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,6 +16,8 @@ const Navbar = () => {
             </div>
             <span className="text-xl font-bold tracking-tight">boleta<span className="text-gradient-green">mx</span></span>
           </div>
+
+          <SiteSwitcher />
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 text-sm">
