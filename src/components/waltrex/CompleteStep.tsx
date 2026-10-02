@@ -36,7 +36,6 @@ const CompleteStep = ({ config, settlement: s, onClose }: {
         <Row label="Sent"><span className="font-mono font-medium">{fmtLocal(s.sent, s.currency)}</span></Row>
         <Row label="Rate"><span className="font-mono text-xs">{fmtLocalRate(s.rate, s.currency)}</span><IndicativeTag source={s.source} /></Row>
         <Row label="Credited"><span className="font-mono font-semibold text-success">{fmtUsd(s.received)}</span></Row>
-        <Row label="Reference"><span className="font-mono text-xs text-muted-foreground">{s.reference}</span></Row>
         <Row label="Order"><span className="font-mono text-xs text-muted-foreground">{s.orderId}</span></Row>
       </Frame>
     );

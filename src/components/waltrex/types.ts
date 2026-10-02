@@ -38,7 +38,6 @@ export interface BankSettlement extends BaseSettlement {
   currency: LocalCurrency;
   sent: number;
   rate: number;
-  reference: string;
   source: RateSource;
 }
 

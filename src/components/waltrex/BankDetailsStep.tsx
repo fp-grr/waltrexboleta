@@ -5,24 +5,30 @@ import { fmtLocal, fmtTime, fmtUsd } from "./format";
 import QuoteExpired from "./QuoteExpired";
 
 /** Fictional demo accounts only. None of these identifiers are real. */
-const BANK_ACCOUNTS: Record<LocalCurrency, { label: string; value: string }[]> = {
+const BENEFICIARY = "Your Company Name, LTD";
+
+interface Field { label: string; value: string; copy?: string; mono?: boolean }
+
+const BANK_ACCOUNTS: Record<LocalCurrency, Field[]> = {
   MXN: [
-    { label: "CLABE", value: "000000000000000018" },
-    { label: "Beneficiary", value: "Waltrex Demo SA de CV" },
-    { label: "Bank", value: "Banco Ejemplo (ficticio)" },
+    { label: "CLABE", value: "999180047392516843", mono: true },
+    { label: "Beneficiary", value: BENEFICIARY },
+    { label: "Bank", value: "Mexico Super Bank" },
   ],
   COP: [
-    { label: "Bank", value: "Banco Ejemplo (ficticio)" },
-    { label: "Account number", value: "000-000000-00" },
+    { label: "Bank", value: "Colombia Super Bank" },
+    { label: "Account number", value: "245-831067-42", copy: "24583106742", mono: true },
     { label: "Account type", value: "Ahorros" },
-    { label: "Beneficiary", value: "Waltrex Demo SAS" },
+    { label: "Beneficiary", value: BENEFICIARY },
   ],
 };
 
-const CopyField = ({ label, value, mono = true }: { label: string; value: string; mono?: boolean }) => {
+const MXN_NOTE = "Each CLABE is uniquely assigned to a customer for the lifetime of their account. While the beneficiary name remains your company’s legal name, each customer receives a unique CLABE. Customers may save these details for future or recurring deposits.";
+
+const CopyField = ({ label, value, copy: copyValue, mono = false }: Field) => {
   const [copied, setCopied] = useState(false);
   const copy = () => {
-    navigator.clipboard?.writeText(value);
+    navigator.clipboard?.writeText(copyValue ?? value);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -40,8 +46,8 @@ const CopyField = ({ label, value, mono = true }: { label: string; value: string
   );
 };
 
-const BankDetailsStep = ({ currency, sent, usdCredited, reference, timeLeft, onRefreshQuote, onConfirm }: {
-  currency: LocalCurrency; sent: number; usdCredited: number; reference: string;
+const BankDetailsStep = ({ currency, sent, usdCredited, timeLeft, onRefreshQuote, onConfirm }: {
+  currency: LocalCurrency; sent: number; usdCredited: number;
   timeLeft: number; onRefreshQuote: () => void; onConfirm: () => void;
 }) => {
   if (timeLeft <= 0) return <QuoteExpired onRefresh={onRefreshQuote} />;
@@ -60,14 +66,9 @@ const BankDetailsStep = ({ currency, sent, usdCredited, reference, timeLeft, onR
       </div>
 
       <div className="space-y-2 mb-3">
-        {BANK_ACCOUNTS[currency].map((f) => (
-          <CopyField key={f.label} label={f.label} value={f.value} mono={f.label !== "Beneficiary" && f.label !== "Bank" && f.label !== "Account type"} />
-        ))}
-        <CopyField label="Reference code (required)" value={reference} />
+        {BANK_ACCOUNTS[currency].map((f) => <CopyField key={f.label} {...f} />)}
       </div>
-      <p className="text-xs text-muted-foreground px-1 mb-6">
-        Include the reference code in your transfer concept so we can match it. Demo account details, not real.
-      </p>
+      {currency === "MXN" ? <p className="text-xs text-muted-foreground px-1 mb-6">{MXN_NOTE}</p> : <div className="mb-3" />}
 
       <button onClick={onConfirm} className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
         I've made the transfer <ArrowRight className="w-4 h-4" />

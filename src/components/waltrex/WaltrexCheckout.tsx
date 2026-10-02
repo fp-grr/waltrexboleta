@@ -45,7 +45,6 @@ const BANK_CONFIRM_CHECKS = 5;
 interface LockedBankQuote extends BankQuote {
   currency: LocalCurrency;
   sent: number;
-  reference: string;
 }
 
 const WaltrexCheckout = ({ open, onClose, config, amount: fixedAmount = 0, summaryLabel, onComplete }: WaltrexCheckoutProps) => {
@@ -185,7 +184,6 @@ const WaltrexCheckout = ({ open, onClose, config, amount: fixedAmount = 0, summa
           rate: bankQuote.rate,
           settleCurrency: "USD",
           received: bankQuote.usdCredited,
-          reference: bankQuote.reference,
           source: bankQuote.source,
           orderId: "WX-" + Math.floor(10000 + Math.random() * 90000),
         };
@@ -218,9 +216,8 @@ const WaltrexCheckout = ({ open, onClose, config, amount: fixedAmount = 0, summa
   };
   const submitBankAmount = (local: number) => {
     if (!bankLock) return;
-    const reference = "WX-" + randomHex(6).toUpperCase();
     setBankAmountDraft(local);
-    setBankQuote({ rate: bankLock.rate, source: bankLock.source, usdCredited: usdFor(local, bankLock.rate), expiresAt: bankLock.expiresAt, currency: bankCur, sent: local, reference });
+    setBankQuote({ rate: bankLock.rate, source: bankLock.source, usdCredited: usdFor(local, bankLock.rate), expiresAt: bankLock.expiresAt, currency: bankCur, sent: local });
     setStep("bank-details");
   };
   // Re-reads the cache (fetchRates only hits the network if the 30 min cache is stale)
@@ -308,11 +305,11 @@ const WaltrexCheckout = ({ open, onClose, config, amount: fixedAmount = 0, summa
           )}
           {step === "bank-details" && bankQuote && (
             <BankDetailsStep currency={bankQuote.currency} sent={bankQuote.sent} usdCredited={bankQuote.usdCredited}
-              reference={bankQuote.reference} timeLeft={bankTimeLeft} onRefreshQuote={refreshBankQuote}
+              timeLeft={bankTimeLeft} onRefreshQuote={refreshBankQuote}
               onConfirm={() => setStep("bank-confirming")} />
           )}
           {step === "bank-confirming" && (
-            <DetectingStep title="Verifying transfer" subtitle="Matching your transfer with your reference code…"
+            <DetectingStep title="Verifying transfer" subtitle="Checking your transfer with the bank…"
               confirmations={confirmations} required={BANK_CONFIRM_CHECKS} unit="checks" />
           )}
 
